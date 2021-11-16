@@ -60,7 +60,7 @@ public class Grammar {
         var result = new StringBuilder();
         for (var nonTerminal:
              nonTerminals) {
-            result.append(nonTerminal+", ");
+            result.append(nonTerminal).append(", ");
         }
         result.delete(result.length()-2, result.length());
         System.out.println(result.toString());
@@ -84,7 +84,7 @@ public class Grammar {
         List<Production> productionsForNonTerminal = new ArrayList<>();
         for (Production production : productions) {
             for (List<String> rule : production.getRules())
-                if (rule.indexOf(nonTerminal) != -1)
+                if (rule.contains(nonTerminal))
                     productionsForNonTerminal.add(production);
         }
         productionsForNonTerminal.forEach(p-> System.out.println(p.toString()));

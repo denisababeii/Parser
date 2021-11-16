@@ -1,11 +1,11 @@
 import java.util.List;
 
 public class Production {
-    private String startingSymbol;
+    private List<String> symbols;
     private List<List<String>> rules;
 
-    Production(String startingSymbol, List<List<String>> rules) {
-        this.startingSymbol = startingSymbol;
+    Production(List<String> symbols, List<List<String>> rules) {
+        this.symbols = symbols;
         this.rules = rules;
     }
 
@@ -13,16 +13,22 @@ public class Production {
         return rules;
     }
 
-    String getStartingSymbol() {
-        return startingSymbol;
+    List<String> getSymbols() {
+        return symbols;
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder(startingSymbol + "->");
+        StringBuilder sb = new StringBuilder();
+
+        for(var symbol: symbols) {
+            sb.append(symbol+" ");
+        }
+        sb.delete(sb.length()-1,sb.length());
+        sb.append("->");
+
         for (List<String> rule: rules) {
             for (String element: rule)
                 sb.append(element).append(" ");
-            sb.append(startingSymbol);
         }
         sb.replace(sb.length() - 3, sb.length() - 1, "");
         return sb.toString();
