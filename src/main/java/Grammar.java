@@ -77,14 +77,20 @@ public class Grammar {
     }
 
     public void printProductions() {
-
+        this.productions.forEach(production -> System.out.println(production.toString()));
     }
 
     public void printProductionsForNonTerminal(String nonTerminal) {
-
+        List<Production> productionsForNonTerminal = new ArrayList<>();
+        for (Production production : productions) {
+            for (List<String> rule : production.getRules())
+                if (rule.indexOf(nonTerminal) != -1)
+                    productionsForNonTerminal.add(production);
+        }
+        productionsForNonTerminal.forEach(p-> System.out.println(p.toString()));
     }
 
     public void checkCFG() {
-
+        System.out.println(this.isCFG);
     }
 }
