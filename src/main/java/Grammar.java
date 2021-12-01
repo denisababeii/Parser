@@ -1,17 +1,28 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Grammar {
     private boolean isCFG;
-    private List<String> terminals;
+
+    public Set<String> getTerminals() {
+        return terminals;
+    }
+
+    private Set<String> terminals;
     private List<String> nonTerminals;
     private List<Production> productions;
     private String startingSymbol;
 
+    public String getStartingSymbol() {
+        return startingSymbol;
+    }
+
+    public List<String> getNonTerminals() {
+        return nonTerminals;
+    }
+
     public Grammar(String file) {
-        terminals = new ArrayList<>();
+        terminals = new HashSet<>();
         nonTerminals = new ArrayList<>();
         productions = new ArrayList<>();
         isCFG = true;
@@ -80,14 +91,29 @@ public class Grammar {
         this.productions.forEach(production -> System.out.println(production.toString()));
     }
 
-    public void printProductionsForNonTerminal(String nonTerminal) {
-        List<Production> productionsForNonTerminal = new ArrayList<>();
+    public Set<Production> getProductionsForNonTerminal(String nonTerminal) {
+        Set<Production> productionsForNonTerminal = new HashSet<>();
         for (Production production : productions) {
             for (List<String> rule : production.getRules())
                 if (rule.contains(nonTerminal))
                     productionsForNonTerminal.add(production);
         }
+        return productionsForNonTerminal;
+    }
+
+    public void printProductionsForNonTerminal(String nonTerminal) {
+        var productionsForNonTerminal = getProductionsForNonTerminal(nonTerminal);
         productionsForNonTerminal.forEach(p-> System.out.println(p.toString()));
+    }
+
+    public List<Production> getProductionsForNonTerminalOnLeftSide(String nonTerminal) {
+        List<Production> productionsForNonTerminal = new LinkedList<>();
+        for (Production production : productions) {
+            if (production.getSymbols().get(0).equals(nonTerminal)) {
+                productionsForNonTerminal.add(production);
+            }
+        }
+        return productionsForNonTerminal;
     }
 
     public void checkCFG() {

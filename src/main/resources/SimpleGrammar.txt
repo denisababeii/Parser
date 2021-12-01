@@ -1,6 +1,6 @@
 a b c d @
 S B C
 S
-STRING->B b|C d
-B->a B|@
-C->c C|@
+S->B b|C d
+B->a C|@
+C->c|@

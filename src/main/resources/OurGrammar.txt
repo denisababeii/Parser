@@ -1,35 +1,35 @@
 A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z _ 0 1 2 3 4 5 6 7 8 9 + - * / % = < > [ ] { } ( ) : . ' " \s \t \n func for from to if while orif and or True False read write @
-program function declarations stmtlist stmt instmt iostmt ifstmt forstmt whilestmt operationstmt orifstmt orstmt condition relation identifier inputList outputList declarations constant operator operation letter recursive digit integer real character string boolean number integerPart fractionalPart
+program function stmtlist stmt instmt iostmt ifstmt forstmt whilestmt operationstmt orifstmt orstmt condition relation identifier inputList outputList declarations constant operator operation letter recursive digit integer real character string boolean number integerPart fractionalPart
 program
-program->function|function program
+program->function|function program @
 function->func \s identifier \s { inputList } = > { outputList } : \n \t stmtlist
-inputList->identifier|, inputList
-outputList->identifier|, outputList
-stmtlist->stmt|stmt \n \t stmtlist
+inputList->identifier|, inputList @
+outputList->identifier|, outputList @
+stmtlist->stmt|stmt \n \t stmtlist @
 stmt->declarations|instmt|iostmt|ifstmt|forstmt|whilestmt|operationstmt
 declarations->identifier = operator
 instmt->read ( identifier )
 iostmt->write ( operator )
 ifstmt->if \s condition : \n \t stmt orifstmt orstmt
-orifstmt->\n orif \s condition : stmt|@
-orstmt->\n or \s : stmt|@
+orifstmt->\n orif \s condition : stmt @|@
+orstmt->\n or \s : stmt @|@
 forstmt->for \s identifier \s from \s operator \s to \s operator :
-whilestmt->while \s condition : \n \t stmt
+whilestmt->while \s condition : \n \t stmt @
 condition->identifier relation operator
 relation-><|< =|< = >|< >|> =|>
 operationstmt->identifier = operator operation operator
 operator->identifier|constant
 operation->+|-|/|*|%
 identifier->letter|letter recursive
-recursive->letter|digit|_|letter recursive|digit recursive|_ recursive
+recursive->letter|digit|_|letter recursive @|digit recursive @|_ recursive @
 letter->A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z|a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z
 digit->0|1|2|3|4|5|6|7|8|9
 constant->integer|real|character|string|boolean
 integer->- number|number|0
-number->1|2|3|4|5|6|7|8|9|number digit
+number->digit|digit number @
 real->- integerPart . fractionalPart|integerPart . fractionalPart
 integerPart->digit|number
-fractionalPart->digit|fractionalPart digit
+fractionalPart->digit|digit fractionalPart @
 character->' letter '|' digit '|' _ '
 string->" recursive "
 boolean->True|False

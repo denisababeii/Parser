@@ -18,19 +18,21 @@ public class Production {
     }
 
     public String toString() {
+
         StringBuilder sb = new StringBuilder();
-
-        for(var symbol: symbols) {
-            sb.append(symbol+" ");
+        for (var symbol:
+             symbols) {
+            sb.append(symbol).append(",");
         }
-        sb.delete(sb.length()-1,sb.length());
+        sb.deleteCharAt(sb.length()-1);
         sb.append("->");
-
-        for (List<String> rule: rules) {
+        for (List<String> rule : rules) {
             for (String element: rule)
                 sb.append(element).append(" ");
+            sb.deleteCharAt(sb.length()-1);
+            sb.append("|");
         }
-        sb.replace(sb.length() - 3, sb.length() - 1, "");
+        sb.deleteCharAt(sb.length()-1);
         return sb.toString();
     }
 }

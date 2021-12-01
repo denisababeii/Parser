@@ -40,8 +40,8 @@ public class Program {
     }
 
     public static void main(String[] args) {
-        //var grammar = new Grammar("src/main/resources/SimpleGrammar.txt");
-        var grammar = new Grammar("src/main/resources/OurGrammar.txt");
+        var grammar = new Grammar("src/main/resources/SimpleGrammar.txt");
+        //var grammar = new Grammar("src/main/resources/OurGrammar.txt");
         try {
             printMenu(grammar);
         } catch (Exception e) {
