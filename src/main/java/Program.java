@@ -2,6 +2,7 @@ import java.util.Scanner;
 
 public class Program {
     public static void printMenu(Grammar grammar) {
+        Parser parser = new Parser(grammar);
         var run = true;
         while (run) {
             System.out.println("\n1. Get nonTerminals\n" +
@@ -31,6 +32,18 @@ public class Program {
                     grammar.checkCFG();
                     break;
                 case "6":
+                    System.out.println(parser.getFirst());
+                    break;
+                case "7":
+                    System.out.println(parser.getFollow());
+                    break;
+                case "8":
+                    System.out.println(parser.followOf("a"));
+                    break;
+                case "9":
+                    System.out.println(parser.firstOf("B"));
+                    break;
+                case "10":
                     run = false;
                     break;
                 default:
@@ -40,7 +53,7 @@ public class Program {
     }
 
     public static void main(String[] args) {
-        var grammar = new Grammar("src/main/resources/SimpleGrammar.txt");
+        var grammar = new Grammar("D:\\University\\YEAR_3_SEM_1\\FCLD\\Parser\\Parser\\src\\main\\resources\\SimpleGrammar.txt");
         //var grammar = new Grammar("src/main/resources/OurGrammar.txt");
         try {
             printMenu(grammar);

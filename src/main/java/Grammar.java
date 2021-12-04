@@ -13,6 +13,10 @@ public class Grammar {
     private List<Production> productions;
     private String startingSymbol;
 
+    public List<Production> getProductions() {
+        return productions;
+    }
+
     public String getStartingSymbol() {
         return startingSymbol;
     }
@@ -64,10 +68,11 @@ public class Grammar {
             }
         } catch (Exception e) {
             e.printStackTrace();
+
         }
     }
 
-    public void printNonTerminals() {
+    public String printNonTerminals() {
         var result = new StringBuilder();
         for (var nonTerminal:
              nonTerminals) {
@@ -75,9 +80,10 @@ public class Grammar {
         }
         result.delete(result.length()-2, result.length());
         System.out.println(result.toString());
+        return result.toString();
     }
 
-    public void printTerminals() {
+    public String printTerminals() {
         var result = new StringBuilder();
         for (var terminal:
                 terminals) {
@@ -85,6 +91,7 @@ public class Grammar {
         }
         result.delete(result.length()-2, result.length());
         System.out.println(result.toString());
+        return result.toString();
     }
 
     public void printProductions() {
@@ -101,9 +108,10 @@ public class Grammar {
         return productionsForNonTerminal;
     }
 
-    public void printProductionsForNonTerminal(String nonTerminal) {
+    public Set<Production> printProductionsForNonTerminal(String nonTerminal) {
         var productionsForNonTerminal = getProductionsForNonTerminal(nonTerminal);
         productionsForNonTerminal.forEach(p-> System.out.println(p.toString()));
+        return productionsForNonTerminal;
     }
 
     public List<Production> getProductionsForNonTerminalOnLeftSide(String nonTerminal) {
@@ -116,7 +124,8 @@ public class Grammar {
         return productionsForNonTerminal;
     }
 
-    public void checkCFG() {
+    public boolean checkCFG() {
         System.out.println(this.isCFG);
+        return this.isCFG;
     }
 }

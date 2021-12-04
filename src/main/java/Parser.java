@@ -21,13 +21,13 @@ public class Parser {
         generateFollow();
     }
 
-    private void generateFirst() {
+    public void generateFirst() {
         for (String nonTerminal : grammar.getNonTerminals()) {
             first.put(nonTerminal, this.firstOf(nonTerminal));
         }
     }
 
-    private Set<String> firstOf(String nonTerminal) {
+    public Set<String> firstOf(String nonTerminal) {
         Set<String> terminalsForCurrentNonTerminal = new HashSet<>();
         Set<String> terminals = grammar.getTerminals();
 
@@ -45,14 +45,14 @@ public class Parser {
         return terminalsForCurrentNonTerminal;
     }
 
-    private void generateFollow() {
+    public void generateFollow() {
         for (String nonTerminal : grammar.getNonTerminals()) {
             if(follow.get(nonTerminal)==null)
                 follow.put(nonTerminal, this.followOf(nonTerminal));
         }
     }
 
-    private Set<String> followOf(String nonTerminal) {
+    public Set<String> followOf(String nonTerminal) {
         Set<String> terminalsForCurrentNonTerminal = new HashSet<>();
         Set<String> terminals = grammar.getTerminals();
 
