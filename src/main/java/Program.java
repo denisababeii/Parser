@@ -10,7 +10,12 @@ public class Program {
                     "3. Get productions\n" +
                     "4. Get productions for a certain nonTerminal\n" +
                     "5. Is it a CFG?\n" +
-                    "6. Exit\n");
+                    "6. Get First\n" +
+                    "7. Get Follow\n" +
+                    "8. Get First Of\n" +
+                    "9. Get Follow Of\n" +
+                    "10. Parse Table\n" +
+                    "11. Exit\n");
 
             Scanner scanner = new Scanner(System.in);
             var choice = scanner.next();
@@ -38,12 +43,17 @@ public class Program {
                     System.out.println(parser.getFollow());
                     break;
                 case "8":
-                    System.out.println(parser.followOf("a"));
+                    var nonTerminal2 = scanner.next();
+                    System.out.println(parser.followOf(nonTerminal2));
                     break;
                 case "9":
-                    System.out.println(parser.firstOf("B"));
+                    var nonTerminal3 = scanner.next();
+                    System.out.println(parser.firstOf(nonTerminal3));
                     break;
                 case "10":
+                    System.out.println(parser.getParseTable().toString());
+                    break;
+                case "11":
                     run = false;
                     break;
                 default:
@@ -53,8 +63,9 @@ public class Program {
     }
 
     public static void main(String[] args) {
-        var grammar = new Grammar("D:\\University\\YEAR_3_SEM_1\\FCLD\\Parser\\Parser\\src\\main\\resources\\SimpleGrammar.txt");
-        //var grammar = new Grammar("src/main/resources/OurGrammar.txt");
+        var grammar = new Grammar("D:\\University\\YEAR_3_SEM_1\\FCLD\\Parser\\Parser\\src\\main\\resources\\SecondSimpleGrammar.txt");
+        //var grammar = new Grammar("D:\\University\\YEAR_3_SEM_1\\FCLD\\Parser\\Parser\\src\\main\\resources\\SimpleGrammar.txt");
+        //var grammar = new Grammar("D:\\University\\YEAR_3_SEM_1\\FCLD\\Parser\\Parser\\src\\main\\resources\\OurGrammar.txt");
         try {
             printMenu(grammar);
         } catch (Exception e) {

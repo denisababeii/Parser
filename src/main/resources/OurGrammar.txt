@@ -1,4 +1,4 @@
-A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z _ 0 1 2 3 4 5 6 7 8 9 + - * / % = < > [ ] { } ( ) : . ' " \s \t \n func for from to if while orif and or True False read write @
+A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z _ 0 1 2 3 4 5 6 7 8 9 + - * / % = < > [ ] { } ( ) : . ' " \s \t \n func for from to if while orif and or True False read write
 program function stmtlist stmt instmt iostmt ifstmt forstmt whilestmt operationstmt orifstmt orstmt condition relation identifier inputList outputList declarations constant operator operation letter recursive digit integer real character string boolean number integerPart fractionalPart
 program
 program->function|function program @
