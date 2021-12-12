@@ -74,42 +74,78 @@ public class Parser {
     }
 
     public void generateFollow() {
-        for (String nonTerminal : grammar.getNonTerminals()) {
-            if(follow.get(nonTerminal)==null)
-                follow.put(nonTerminal, this.followOf(nonTerminal));
+        follow.put(grammar.getStartingSymbol(), Collections.singleton("$"));
+        for (String nonTerminal : grammar.getNonTerminals()){
+            if(!nonTerminal.equals(grammar.getStartingSymbol()))
+                follow.put(nonTerminal, new HashSet<>());
+        }
+        Map<String, Set<String>> currentFollow = follow();
+        var run = true;
+        while(run) {
+            currentFollow = follow();
+            var keys = currentFollow.keySet();
+            run = false;
+            for (var key: keys) {
+                if(!(currentFollow.get(key).equals(follow.get(key))))
+                    run=true;
+            }
+            follow.clear();
+            follow.putAll(currentFollow);
         }
     }
 
-    public Set<String> followOf(String nonTerminal) {
-        Set<String> terminalsForCurrentNonTerminal = new HashSet<>();
-        Set<String> terminals = grammar.getTerminals();
+    public Map<String, Set<String>> follow() {
+        Map<String, Set<String>> currentFollow = new HashMap<>();
+        for (String nonTerminal : grammar.getNonTerminals()){
+            if(follow.get(nonTerminal).size()!=0){
+                currentFollow.put(nonTerminal,follow.get(nonTerminal));
+            }
+            else {
+                currentFollow.put(nonTerminal,new HashSet<>());
+            }
 
-        if(nonTerminal.equals(grammar.getStartingSymbol()))
-            terminalsForCurrentNonTerminal.add("$");
-
-        var productionsForNonTerminal = grammar.getProductionsForNonTerminal(nonTerminal);
-        for(Production production : productionsForNonTerminal) {
-            String symbol = production.getSymbols().get(0);
-            var rules = production.getRules();
-            for(List<String> rule : rules) {
-                if(rule.contains(nonTerminal)) {
-                    if (rule.indexOf(nonTerminal) != rule.size() - 1) {
-                        var afterSymbol = rule.get(rule.indexOf(nonTerminal) + 1);
-                        if (terminals.contains(afterSymbol))
-                            terminalsForCurrentNonTerminal.add(afterSymbol);
-                        else
-                            terminalsForCurrentNonTerminal.addAll(first.get(afterSymbol));
-                        terminalsForCurrentNonTerminal.remove("@");
-                    } else {
-                        if (follow.get(symbol) == null && !symbol.equals(nonTerminal))
-                            follow.put(symbol, followOf(symbol));
-                        if(!symbol.equals(nonTerminal))
-                            terminalsForCurrentNonTerminal.addAll(follow.get(symbol));
+            var productionsForNonTerminal = grammar.getProductionsForNonTerminal(nonTerminal);
+            for (var production:productionsForNonTerminal) {
+                var rules = production.getRules();
+                for(var rule:rules){
+                    if(rule.contains(nonTerminal)) {
+                        var index = rule.indexOf(nonTerminal);
+                        if(index!=rule.size()-1) {
+                            var afterSequence = new ArrayList<String>();
+                            for(int i=index+1;i<rule.size();i++)
+                                afterSequence.add(rule.get(i));
+                            var firstOfRule = firstOfRule(afterSequence);
+                            for (var symbol:firstOfRule) {
+                                if (!symbol.equals("@")) {
+                                    var current = currentFollow.get(nonTerminal);
+                                    current.add(symbol);
+                                    currentFollow.put(nonTerminal, current);
+                                }
+                                else {
+                                    var symbolsOfLeftTerminal = follow.get(production.getSymbols().get(0));
+                                    var current = currentFollow.get(nonTerminal);
+                                    for (var symbolLeftTerminal: symbolsOfLeftTerminal) {
+                                        if(!current.contains(symbolLeftTerminal))
+                                            current.add(symbolLeftTerminal);
+                                    }
+                                    currentFollow.put(nonTerminal,current);
+                                }
+                            }
+                        }
+                        else {
+                            var symbolsOfLeftTerminal = follow.get(production.getSymbols().get(0));
+                            var current = currentFollow.get(nonTerminal);
+                            for (var symbol: symbolsOfLeftTerminal) {
+                                if(!current.contains(symbol))
+                                    current.add(symbol);
+                            }
+                            currentFollow.put(nonTerminal,current);
+                        }
                     }
                 }
             }
         }
-        return terminalsForCurrentNonTerminal;
+        return currentFollow;
     }
 
     private Set<String> firstOfRule(List<String> rule) {
