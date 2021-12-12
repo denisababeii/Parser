@@ -35,7 +35,7 @@ public class Parser {
         this.follow = new HashMap<>();
         generateFirst();
         generateFollow();
-        createParseTable();
+        createTable();
     }
 
     public void generateFirst() {
@@ -112,10 +112,52 @@ public class Parser {
         return terminalsForCurrentNonTerminal;
     }
 
-    private void createParseTable() {
-        // initialize productions' indexes
-        countProductions();
+    private Set<String> firstOfRule(List<String> rule) {
+        Set<String> set1 = new HashSet<>();
+        Set<String> set2 = new HashSet<>();
 
+        if(grammar.getTerminals().contains(rule.get(0)))
+        {
+            set1.add(rule.get(0));
+            return set1;
+        }
+        else {
+            if(first.get(rule.get(0))!=null)
+                set1.addAll(first.get(rule.get(0)));
+        }
+
+        if(rule.size() == 1)
+            return set1;
+
+        var concatenationResult = new HashSet<String>();
+        var i = 1;
+        while(i<rule.size()){
+            if (grammar.getTerminals().contains(rule.get(i))) {
+                set2.add(rule.get(i));
+            }
+            else {
+                if(first.get(rule.get(i))!=null)
+                    set2.addAll(first.get(rule.get(i)));
+            }
+            if(set2.size() == 0)
+                break;
+            for(var symbol1: set1) {
+                for(var symbol2: set2) {
+                    if(symbol1.equals("@"))
+                        concatenationResult.add(symbol2);
+                    else
+                        concatenationResult.add(symbol1);
+                }
+            }
+            set1.clear();
+            set1.addAll(set2);
+            i++;
+        }
+        return concatenationResult;
+    }
+
+    private void createTable() {
+        countProductions();
         // get terminals for table's top row (head of the table)
         List<String> columnSymbols = new LinkedList<>(grammar.getTerminals());
         columnSymbols.add("$");
@@ -125,52 +167,31 @@ public class Parser {
         // for every terminal-terminal matching pair we insert "pop"
         for (String terminal: grammar.getTerminals())
             parseTable.put(new Pair<>(terminal, terminal), new Pair<>(Collections.singletonList("pop"), -1));
-
-
         numberedProductions.forEach((key, value) -> {
             String rowSymbol = key.getKey();
             List<String> rule = key.getValue();
-            Pair<List<String>, Integer> parseTableValue = new Pair<>(rule, value);
 
-            for (String columnSymbol : columnSymbols) {
-                Pair<String, String> parseTableKey = new Pair<>(rowSymbol, columnSymbol);
-
-                // if our column-terminal is exactly first of rule
-                if (rule.get(0).equals(columnSymbol) && !columnSymbol.equals("@"))
-                    parseTable.put(parseTableKey, parseTableValue);
-
-                // if the first symbol is a non-terminal and it's first contains our column-terminal
-                else if (grammar.getNonTerminals().contains(rule.get(0)) && first.get(rule.get(0)).contains(columnSymbol)) {
-                    if (!parseTable.containsKey(parseTableKey)) {
-                        parseTable.put(parseTableKey, parseTableValue);
+            var firstOfRule = firstOfRule(rule);
+            if(firstOfRule.size() != 0) {
+                for (var item : firstOfRule) {
+                    if (!item.equals("@")) {
+                        var parseTableKey = new Pair<String, String>(rowSymbol, item);
+                        var parseTableValue = new Pair<List<String>, Integer>(rule, value);
+                        if(!parseTable.containsKey(parseTableKey))
+                            parseTable.put(parseTableKey, parseTableValue);
                     }
                 }
-                else {
-                    // if the first symbol is ε then everything in FOLLOW(rowSymbol) will be in parse table
-                    if (rule.get(0).equals("@")) {
-                        for (String b : follow.get(rowSymbol))
-                            parseTable.put(new Pair<>(rowSymbol, b), parseTableValue);
+            }
 
-                        // if ε is in FIRST(rule)
-                    } else {
-                        Set<String> firsts = new HashSet<>();
-                        for (String symbol : rule)
-                            if (grammar.getNonTerminals().contains(symbol))
-                                firsts.addAll(first.get(symbol));
-                        if (firsts.contains("@")) {
-                            for (String b : first.get(rowSymbol)) {
-                                if (b.equals("@"))
-                                    b = "$";
-                                parseTableKey = new Pair<>(rowSymbol, b);
-                                if (!parseTable.containsKey(parseTableKey)) {
-                                    parseTable.put(parseTableKey, parseTableValue);
-                                }
-                            }
-                        }
-                    }
+            if((rule.size()==1 && rule.get(0).equals("@")) || firstOfRule.contains("@")) {
+                var parseTableValue = new Pair<List<String>, Integer>(rule,value);
+                var followOfNonTerminal = follow.get(rowSymbol);
+                for(var symbol: followOfNonTerminal){
+                    var parseTableKey = new Pair<String,String>(rowSymbol,symbol);
+                    if(!parseTable.containsKey(parseTableKey))
+                        parseTable.put(parseTableKey,parseTableValue);
                 }
             }
         });
     }
-
 }
