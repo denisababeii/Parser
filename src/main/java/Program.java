@@ -44,7 +44,7 @@ public class Program {
                     break;
                 case "8":
                     var nonTerminal2 = scanner.next();
-                    System.out.println(parser.followOf(nonTerminal2));
+                    System.out.println(parser.getFollow().get(nonTerminal2));
                     break;
                 case "9":
                     var nonTerminal3 = scanner.next();
@@ -66,7 +66,9 @@ public class Program {
         //var grammar = new Grammar("D:\\University\\YEAR_3_SEM_1\\FCLD\\Parser\\Parser\\src\\main\\resources\\SecondSimpleGrammar.txt");
         //var grammar = new Grammar("D:\\University\\YEAR_3_SEM_1\\FCLD\\Parser\\Parser\\src\\main\\resources\\SimpleGrammar.txt");
         //var grammar = new Grammar("D:\\University\\YEAR_3_SEM_1\\FCLD\\Parser\\Parser\\src\\main\\resources\\OurGrammar.txt");
-        var grammar = new Grammar("src/main/resources/SecondSimpleGrammar.txt");
+        //var grammar = new Grammar("src/main/resources/SecondSimpleGrammar.txt");
+        var grammar = new Grammar("src/main/resources/SimpleGrammar.txt");
+        //var grammar = new Grammar("src/main/resources/OurGrammar.txt");
         try {
             printMenu(grammar);
         } catch (Exception e) {

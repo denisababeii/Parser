@@ -150,7 +150,7 @@ public class TestParser {
     public void testFollowOf(){
         Set<String> terminalsForCurrentNonTerminal = new HashSet<>();
         terminalsForCurrentNonTerminal.add("c");
-        Assert.assertEquals(terminalsForCurrentNonTerminal, parser.followOf("a"));
+        Assert.assertEquals(terminalsForCurrentNonTerminal, parser.getFollow().get("a"));
     }
 
     @Test
