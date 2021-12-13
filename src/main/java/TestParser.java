@@ -158,6 +158,6 @@ public class TestParser {
         Set<String> terminalsForCurrentNonTerminal = new HashSet<>();
         terminalsForCurrentNonTerminal.add("@");
         terminalsForCurrentNonTerminal.add("a");
-        Assert.assertEquals(terminalsForCurrentNonTerminal, parser.firstOf("B"));
+        Assert.assertEquals(terminalsForCurrentNonTerminal, parser.getFirst().get("B"));
     }
 }
