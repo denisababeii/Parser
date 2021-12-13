@@ -52,38 +52,53 @@ public class Parser {
     }
 
     public void generateFirst() {
-        for (String nonTerminal : grammar.getNonTerminals()) {
-            first.put(nonTerminal, this.firstOf(nonTerminal));
+        for (String nonTerminal : grammar.getNonTerminals()){
+            var productions = grammar.getProductionsForNonTerminalOnLeftSide(nonTerminal);
+            var firstSet = new HashSet<String>();
+            for (var production: productions) {
+                for(var rule: production.getRules()) {
+                    var firstSymbolOnRightSide = rule.get(0);
+                    if(grammar.getTerminals().contains(firstSymbolOnRightSide) || firstSymbolOnRightSide.equals("@"))
+                        firstSet.add(firstSymbolOnRightSide);
+                }
+            }
+            first.put(nonTerminal,firstSet);
+        }
+        Map<String, Set<String>> currentFirst = new HashMap<>();
+        var run = true;
+        while(run) {
+            currentFirst = first();
+            var keys = currentFirst.keySet();
+            run = false;
+            for (var key: keys) {
+                if(!(currentFirst.get(key).equals(first.get(key))))
+                    run=true;
+            }
+            first.clear();
+            first.putAll(currentFirst);
         }
     }
 
-    public Set<String> firstOf(String nonTerminal) {
-        if (first.containsKey(nonTerminal))
-            return first.get(nonTerminal);
-        Set<String> terminalsForCurrentNonTerminal = new HashSet<>();
-        Set<String> terminals = grammar.getTerminals();
-
-        for (Production production : grammar.getProductionsForNonTerminalOnLeftSide(nonTerminal))
-            for (List<String> rule : production.getRules()) {
-                String firstSymbol = rule.get(0);
-                if (firstSymbol.equals("@"))
-                    terminalsForCurrentNonTerminal.add("@");
-                else if (terminals.contains(firstSymbol))
-                    terminalsForCurrentNonTerminal.add(firstSymbol);
-                else{
-                    if (first.get(firstSymbol) == null)
-                        first.put(firstSymbol, firstOf(firstSymbol));
-                    terminalsForCurrentNonTerminal.addAll(first.get(firstSymbol));
-                    terminalsForCurrentNonTerminal.remove("@");
-                    if(first.get(firstSymbol).contains("@")){
-                        if(rule.size() > 1)
-                            terminalsForCurrentNonTerminal.add(rule.get(1));
-                        else terminalsForCurrentNonTerminal.add("@");
-                    }
-                }
-
+    public Map<String, Set<String>> first() {
+        Map<String, Set<String>> currentFirst = new HashMap<>();
+        for (String nonTerminal : grammar.getNonTerminals()){
+            if(first.get(nonTerminal).size()!=0){
+                currentFirst.put(nonTerminal,first.get(nonTerminal));
             }
-        return terminalsForCurrentNonTerminal;
+            else {
+                currentFirst.put(nonTerminal,new HashSet<>());
+            }
+            var productions = grammar.getProductionsForNonTerminalOnLeftSide(nonTerminal);
+            for (var production:productions) {
+                for(var rule: production.getRules()) {
+                    var firstOfRule = firstOfRule(rule);
+                    var current = currentFirst.get(nonTerminal);
+                    current.addAll(firstOfRule);
+                    currentFirst.put(nonTerminal, current);
+                }
+            }
+        }
+        return currentFirst;
     }
 
     public void generateFollow() {
@@ -92,7 +107,7 @@ public class Parser {
             if(!nonTerminal.equals(grammar.getStartingSymbol()))
                 follow.put(nonTerminal, new HashSet<>());
         }
-        Map<String, Set<String>> currentFollow = follow();
+        Map<String, Set<String>> currentFollow = new HashMap<>();
         var run = true;
         while(run) {
             currentFollow = follow();
@@ -173,6 +188,8 @@ public class Parser {
         else {
             if(first.get(rule.get(0))!=null)
                 set1.addAll(first.get(rule.get(0)));
+            else
+                return new HashSet<>();
         }
 
         if(rule.size() == 1)

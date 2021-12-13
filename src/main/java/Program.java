@@ -49,7 +49,7 @@ public class Program {
                     break;
                 case "9":
                     var nonTerminal3 = scanner.next();
-                    System.out.println(parser.firstOf(nonTerminal3));
+                    System.out.println(parser.getFirst().get(nonTerminal3));
                     break;
                 case "10":
                     System.out.println(parser.getParseTable().toString());
