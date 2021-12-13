@@ -245,6 +245,9 @@ public class Parser {
                         var parseTableValue = new Pair<List<String>, Integer>(rule, value);
                         if(!parseTable.containsKey(parseTableKey))
                             parseTable.put(parseTableKey, parseTableValue);
+                        else {
+                            System.out.println("Error at: "+parseTableKey.getKey()+" "+parseTableKey.getValue()+" "+parseTableValue.getKey()+" "+parseTable.get(parseTableKey).getKey());
+                        }
                     }
                 }
             }
@@ -256,6 +259,9 @@ public class Parser {
                     var parseTableKey = new Pair<String,String>(rowSymbol,symbol);
                     if(!parseTable.containsKey(parseTableKey))
                         parseTable.put(parseTableKey,parseTableValue);
+                    else {
+                        System.out.println("Error at: "+parseTableKey.getKey()+" "+parseTableKey.getValue()+" "+parseTableValue.getKey()+" "+parseTable.get(parseTableKey).getKey());
+                    }
                 }
             }
         });
