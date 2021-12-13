@@ -2,12 +2,9 @@ import java.io.*;
 import java.util.*;
 
 public class Grammar {
+
+    private String outputFile;
     private boolean isCFG;
-
-    public Set<String> getTerminals() {
-        return terminals;
-    }
-
     private Set<String> terminals;
     private List<String> nonTerminals;
     private List<Production> productions;
@@ -25,10 +22,19 @@ public class Grammar {
         return nonTerminals;
     }
 
-    public Grammar(String file) {
+    public String getOutputFile() {
+        return outputFile;
+    }
+
+    public Set<String> getTerminals() {
+        return terminals;
+    }
+
+    public Grammar(String file, String outputFile) {
         terminals = new HashSet<>();
         nonTerminals = new ArrayList<>();
         productions = new ArrayList<>();
+        this.outputFile = outputFile;
         isCFG = true;
         read(file);
     }

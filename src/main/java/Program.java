@@ -8,17 +8,18 @@ public class Program {
             System.out.println("\n1. Get nonTerminals\n" +
                     "2. Get terminals\n" +
                     "3. Get productions\n" +
-                    "4. Get productions for a certain nonTerminal\n" +
+                    "4. Get productions for a certain NonTerminal\n" +
                     "5. Is it a CFG?\n" +
                     "6. Get First\n" +
                     "7. Get Follow\n" +
-                    "8. Get First Of\n" +
-                    "9. Get Follow Of\n" +
-                    "10. Parse Table\n" +
-                    "11. Exit\n");
+                    "8. Get First Of NonTerminal\n" +
+                    "9. Get Follow Of NonTerminal\n" +
+                    "10. Get Parse Table\n" +
+                    "11. Parse sequence and print Parsing Tree\n" +
+                    "12. Exit\n");
 
             Scanner scanner = new Scanner(System.in);
-            var choice = scanner.next();
+            var choice = scanner.nextLine();
             switch (choice) {
                 case "1":
                     grammar.printNonTerminals();
@@ -54,6 +55,12 @@ public class Program {
                     System.out.println(parser.getParseTable().toString());
                     break;
                 case "11":
+                    var sequence = scanner.nextLine();
+                    var parserOutput = new ParserOutput(sequence,parser);
+                    System.out.println(parserOutput.getResult());
+                    System.out.println(parserOutput.getTree());
+                    break;
+                case "12":
                     run = false;
                     break;
                 default:
@@ -62,14 +69,33 @@ public class Program {
         }
     }
 
-    public static void main(String[] args) {
+    public static Grammar pickGrammar() {
         //var grammar = new Grammar("D:\\University\\YEAR_3_SEM_1\\FCLD\\Parser\\Parser\\src\\main\\resources\\SecondSimpleGrammar.txt");
-        //var grammar = new Grammar("D:\\University\\YEAR_3_SEM_1\\FCLD\\Parser\\Parser\\src\\main\\resources\\SimpleGrammar.txt");
-        //var grammar = new Grammar("D:\\University\\YEAR_3_SEM_1\\FCLD\\Parser\\Parser\\src\\main\\resources\\OurGrammar.txt");
         //var grammar = new Grammar("src/main/resources/SecondSimpleGrammar.txt");
-        var grammar = new Grammar("src/main/resources/SimpleGrammar.txt");
-        //var grammar = new Grammar("src/main/resources/OurGrammar.txt");
+        System.out.println("""
+                Pick grammar:\s
+                1. Simple grammar
+                2. Our grammar
+                """);
+        Scanner scanner = new Scanner(System.in);
+        Grammar grammar = null;
+        var choice = scanner.nextLine();
+        switch (choice) {
+            case "1":
+                //return new Grammar("D:\\University\\YEAR_3_SEM_1\\FCLD\\Parser\\Parser\\src\\main\\resources\\SimpleGrammar.txt","D:\\University\\YEAR_3_SEM_1\\FCLD\\Parser\\Parser\\src\\main\\resources\\SimpleGrammar.out");
+                return new Grammar("src/main/resources/SimpleGrammar.txt", "src/main/resources/SimpleGrammar.out");
+            case "2":
+                //return new Grammar("D:\\University\\YEAR_3_SEM_1\\FCLD\\Parser\\Parser\\src\\main\\resources\\OurGrammar.txt","D:\\University\\YEAR_3_SEM_1\\FCLD\\Parser\\Parser\\src\\main\\resources\\OurGrammar.out");
+                return new Grammar("src/main/resources/OurGrammar.txt", "src/main/resources/OurGrammar.out");
+            default:
+                System.out.println("Error");
+                return null;
+        }
+    }
+
+    public static void main(String[] args) {
         try {
+            var grammar = pickGrammar();
             printMenu(grammar);
         } catch (Exception e) {
             System.out.println(e.getMessage());
