@@ -13,7 +13,7 @@ public class TestParser {
     Parser parser;
     @Before
     public void setUp() throws Exception {
-        grammar = new Grammar("src/main/resources/SimpleGrammar.txt");
+        grammar = new Grammar("src/main/resources/SimpleGrammar.txt","src/main/resources/SimpleGrammarTest.out");
         parser = new Parser(grammar);
     }
 

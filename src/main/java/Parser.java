@@ -1,6 +1,10 @@
 import java.util.*;
 
 public class Parser {
+    public Grammar getGrammar() {
+        return grammar;
+    }
+
     private Grammar grammar;
     private Map<String, Set<String>> first;
     private Map<String, Set<String>> follow;
@@ -10,6 +14,15 @@ public class Parser {
     }
 
     private ParseTable parseTable = new ParseTable();
+
+    public Pair<String, List<String>> getProductionByIndex(int index) {
+        for (var entry: numberedProductions.entrySet()) {
+            if(entry.getValue() == index)
+                return entry.getKey();
+        }
+        return null;
+    }
+
     // Pair contains values of a Production; First String is starting Symbol and the list is for rules
     // Integer is the number of the production
     private Map<Pair<String, List<String>>, Integer> numberedProductions = new HashMap<>();
